@@ -1,38 +1,32 @@
 #include <iostream>
-#include <vector>
 #include <string>
 using namespace std;
 
-void findFraction(int count) {
-    vector<vector<string>> arr(10);
+void findFraction(int num) {
+    int mom = 1, son = 1;
+    int find = 1;
+    int increse = 1;
 
-    int i = 0;
+    // 분모를 늘려 범위를 좁힘
+    while(find + increse <= num) {
+        find += increse;
+        increse++;
+        mom++;
+    }
+    
+    while(find != num) {
+        find++;
+        mom--;
+        son++;
+    }
 
-    while(count--) {
-        // 인덱스 값이 더 크게 되면 추가 할당
-        if(arr.size()-1 < i)
-            arr.resize(i+1);
-        
-        if(arr[i].empty()) {
-            arr[i].push_back(to_string(i+1) + "/1");
-            if (count == 0)
-                cout << arr[i].back();
-            i = 0;
-        }
-        else {
-            arr[i].push_back(to_string(i+1) + "/" + to_string(arr[i].size() + 1));
-            if (count == 0)
-                cout << arr[i].back();
-            i++;
-        }
-        
-    }   
+    cout << to_string(son) + "/" + to_string(mom);
 }
 
 int main() {
-    int count; cin >> count;
+    int num; cin >> num;
 
-    findFraction(count);
+    findFraction(num);
 
     return 0;
 }

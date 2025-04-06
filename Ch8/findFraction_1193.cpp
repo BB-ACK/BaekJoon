@@ -3,24 +3,27 @@
 using namespace std;
 
 void findFraction(int num) {
-    int mom = 1, son = 1;
-    int find = 1;
-    int increse = 1;
+    int line = 1, find = 0;
 
-    // 분모를 늘려 범위를 좁힘
-    while(find + increse <= num) {
-        find += increse;
-        increse++;
-        mom++;
-    }
-    
-    while(find != num) {
-        find++;
-        mom--;
-        son++;
+    while(find < num) {
+        find += line;
+        line++;
     }
 
-    cout << to_string(son) + "/" + to_string(mom);
+    line--; // 실제 줄 번호
+    int index = num - (find - line); // 몇 번째 인덱스인지
+    int son, mom;
+
+    if(line % 2) { // 홀수 줄 방향
+        mom = index;
+        son = line - index + 1;
+    }
+    else {
+        mom = line - index + 1;
+        son = index;
+    }
+
+    cout << son << "/" << mom;
 }
 
 int main() {

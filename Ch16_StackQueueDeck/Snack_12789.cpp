@@ -10,9 +10,15 @@ string isGetSnack(queue<int> order) {
     int orderSize = order.size(); // 변형이 되어 조건문에 사용을 위해
 
     for(int i = 0; i < orderSize; i++) {
+        // 줄 서있는게 현재 번호인 경우
         if(order.front() == cur) {
             cur++;
             order.pop();
+        }
+        // 빈 공간에 서있는게 현재 번호인 경우
+        else if(!space.empty() && space.back() == cur) {
+            cur++;
+            space.pop_back();
         }
         else {
             if (!space.empty() && space.back() < order.front()) {
@@ -39,9 +45,3 @@ int main() {
     
     return 0;
 }
-
-/*
-오답 예제 
-2 1 3 -> Nice
-3 1 2 4 -> Nice
-*/

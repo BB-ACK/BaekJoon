@@ -65,7 +65,7 @@ public:
             return -1;
         
         int tmp = this->arr[this->top];
-        this->arr[this->top] = NULL;
+        // this->arr[this->top] = NULL;
         this->top--;
 
         return tmp;
@@ -94,7 +94,7 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    
+
     Deque Dq;
     int test; cin >> test;
 

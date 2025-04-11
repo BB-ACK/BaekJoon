@@ -1,90 +1,85 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Deque {
 private:
     int capacity;
+    int start;
     int top;
     int *arr;
 
 public:
     // 생성자
-    Deque(int capacity = 1000000) {
+    Deque(int capacity = 2000000) {
         this->capacity = capacity;
-        this->top = -1;
+        this->start = 1000000; // 100만번째 부터 배열을 시작함
+        this->top = 1000000;
         this->arr = new int[this->capacity];
     }
 
-    // 비어있는지 확인
+    // 6: 비어있는지 확인
     int empty() {
-        if(this->top == -1)
+        if(this->top == this->start)
             return 1;
         return 0;
     }
 
-    // 원소의 갯수 리턴
+    // 5: 원소의 갯수 리턴
     int size() {
-        return this->top + 1;
+        return this->top - this->start;
     }
 
-    // 맨 앞에 대입
+    // 1: 맨 앞에 대입
     void pushFront(int e) {
-        // 뒤로 한 칸씩 밀기
-        for(int i = this->size(); i > 0; i--) {
-            this->arr[i] = this->arr[i-1];
-        }
-        this->top++;
-        this->arr[0] = e;
+        this->start--;
+        this->arr[this->start] = e;
+
     }
 
-    // 맨 뒤에 대입
+    // 2: 맨 뒤에 대입
     void pushBack(int e) {
-        this->top++;
         this->arr[this->top] = e;
+        this->top++;
     }
 
 
-    // 맨 앞에 요소 빼기
+    // 3: 맨 앞에 요소 빼기
     int popFront() {
         if(this->empty()) 
             return -1;
         
-        int tmp = this->arr[0];
-        // 배열 정리
-        for(int i = 0; i < this->size(); i++) {
-            this->arr[i] = this->arr[i+1];
-        }
-        this->top--;
-
+        int tmp = this->arr[this->start];
+        this->start++;
+            
         return tmp;
     }
 
-    // 맨 뒤에 요소 빼기
+    // 4: 맨 뒤에 요소 빼기
     int popBack() {
         if(this->empty())
             return -1;
         
-        int tmp = this->arr[this->top];
-        this->arr[this->top] = NULL;
         this->top--;
+        int tmp = this->arr[this->top];
 
         return tmp;
     }
 
-    // 맨 앞에 요소 참조
+    // 7: 맨 앞에 요소 참조
     int front() {
         if(this->empty())
             return -1;
         
-        return this->arr[0];
+        return this->arr[this->start];
     }
 
-    // 맨 뒤에 요소 참조
+    // 8: 맨 뒤에 요소 참조
     int back() {
         if(this->empty()) 
             return -1;
         
-        return this->arr[this->top];
+        return this->arr[this->top - 1];
     }
 
     
@@ -101,6 +96,7 @@ int main() {
     while(test--) {
         int instructions; cin >> instructions;
         int num;
+
         switch (instructions) {
         case 1:
             cin >> num;
@@ -127,6 +123,7 @@ int main() {
             break;
         case 8:
             cout << Dq.back() << '\n';
+            break;
         }
     }
 

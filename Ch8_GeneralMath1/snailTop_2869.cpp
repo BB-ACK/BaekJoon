@@ -2,16 +2,7 @@
 using namespace std;
 
 int ontheTop(int up, int down, int top) {
-    int cur = 0;
-
-    for(int i = 1; ; i++) {
-        cur += up;
-        
-        if(cur >= top)
-            return i;
-        else 
-            cur -= down;
-    }
+    return ((top - down - 1) / (up - down)) + 1;
 }
 
 int main() {

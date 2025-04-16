@@ -12,15 +12,21 @@ class DoubleLinkedList{
 public:
     Node* cursor; // 커서의 역할
     Node* top; // 제일 뒤 노드를 가리킴, 출력문을 위해
-    
+    Node* front;
     // 생성자
     DoubleLinkedList() {
         this->cursor = NULL; 
         this->top = NULL;
+        
+        Node *first = new Node;
+        first->Llink = NULL;
+        first->Rlink = NULL;
+        this->front = first;
+
     }
 
     int isEmpty() {
-        return this->top == NULL;
+        return this->front->Rlink == NULL;
     }
 
     // P에 대응 - 마지막에 요소를 넣어줌
@@ -29,9 +35,10 @@ public:
         node->data = e;
         
         if(this->isEmpty()) {
-            node->Llink = NULL; // 맨 앞은 참조하는 왼쪽 노드가 없음
+            node->Llink = this->front; 
             node->Rlink = NULL;
-            this->top = node;
+
+            this->front->Rlink = node;
         }
         
         // 현재 커서가 제일 위에 있는 경우
@@ -46,6 +53,7 @@ public:
         else {
             node->Llink = this->cursor;
             node->Rlink = this->cursor->Rlink;
+
             this->cursor->Rlink->Llink = node;
             this->cursor->Rlink = node;
         }
@@ -72,18 +80,19 @@ public:
     // B에 대응 - 현재 가리키는 커서 원소 삭제
     void backSpace() {
         // 맨 앞이면 무시
-        if(this->cursor->Llink == NULL)
+        if(this->cursor == this->front)
             return;
         
-        Node prev = *this->cursor->Llink; // 커서 왼쪽 노드를 가리킴
+        Node *prev = this->cursor->Llink; // 커서 왼쪽 노드를 가리킴
         if(this->cursor->Rlink == NULL) { // 커서가 맨위에 있는 경우
-            prev.Rlink = NULL;
+            prev->Rlink = NULL;
         }
         else {
-            prev.Rlink = this->cursor->Rlink;
+            prev->Rlink = this->cursor->Rlink;
+            this->cursor->Rlink->Llink = prev;
         }
         
-        this->cursor = &prev;
+        this->cursor = prev;
     }
 
 };
@@ -117,10 +126,15 @@ int main() {
         }
     }
 
-    Node *tmp = DLL.top;
-    while(tmp->Llink != NULL) {
+    Node *tmp = DLL.front->Rlink;
+    while(tmp != NULL) {
         cout << tmp->data;
-        tmp = tmp->Rlink; // 다음 노드로 변경
+        if(tmp->Rlink != NULL)
+            tmp = tmp->Rlink; // 다음 노드로 변경
+        
+        else if(tmp->Rlink == NULL){
+            break;
+        }
     }
 
     cout << endl;

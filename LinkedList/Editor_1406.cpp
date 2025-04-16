@@ -11,12 +11,10 @@ struct Node {
 class DoubleLinkedList{
 public:
     Node* cursor; // 커서의 역할
-    Node* top; // 제일 뒤 노드를 가리킴, 출력문을 위해
-    Node* front;
+    Node* front; // 출력문을 위한 빈노드
     // 생성자
     DoubleLinkedList() {
         this->cursor = NULL; 
-        this->top = NULL;
         
         Node *first = new Node;
         first->Llink = NULL;
@@ -37,7 +35,6 @@ public:
         if(this->isEmpty()) {
             node->Llink = this->front; 
             node->Rlink = NULL;
-
             this->front->Rlink = node;
         }
         
@@ -48,7 +45,6 @@ public:
             node->Rlink = NULL;
             // 원래 노드 값들 변경
             this->cursor->Rlink = node;
-            this->top = node;
         }
         else {
             node->Llink = this->cursor;

@@ -2,36 +2,72 @@
 #include <vector>
 using namespace std;
 
-void isContain(vector<int> &have, vector<int> &find) {
-    int haveLen = have.size();
-    int findLen = find.size();
+int capacity = 500001;
 
-    for(int i = 0; i < findLen; i++) {
-        for(int j = 0; j < haveLen; j++) {
-            if(find[i] == have[j]) {
-                cout << 1 << " ";
-                break;
-            }
-            else if(j == haveLen -1) 
-                cout << 0 << " ";
-        }
+struct Node {
+    int data;
+    Node *next;
+};
+
+class Chaining {
+private:
+    vector<Node *> arr;
+
+public:
+    // 생성자
+    Chaining() {
+        arr.resize(capacity, nullptr);
     }
-}
+
+    void insert(int e) {
+        int idx = ((e % capacity) + capacity) % capacity;
+
+        Node *node = new Node{e, this->arr[idx]};
+        this->arr[idx] = node;
+    }
+
+    void search(int e) {
+        int idx = ((e % capacity) + capacity) % capacity;
+
+        Node *node = this->arr[idx];
+        if (node == nullptr) {
+            cout << 0 << '\n';
+            return;
+        }
+
+        while (node != nullptr) {
+            if (node->data == e) {
+                cout << 1 << '\n';
+                return;
+            }
+
+            node = node->next;
+        }
+
+        cout << 0 << '\n';
+    }
+};
 
 int main() {
-    int haveNum; cin >> haveNum;
-    vector<int> have(haveNum);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    Chaining Ch;
+    int have;
+    cin >> have;
+    while (have--) {
+        int e;
+        cin >> e;
+        Ch.insert(e);
+    }
 
-    for(int i = 0; i < haveNum; i++)
-        cin >> have[i];
+    int find;
+    cin >> find;
+    while (find--) {
+        int e;
+        cin >> e;
+        Ch.search(e);
+    }
 
-    int findNum; cin >> findNum;
-    vector<int> find(findNum);
-    
-    for(int i = 0; i < findNum; i++) 
-        cin >> find[i];
-    
-    isContain(have, find);
-    
     return 0;
 }

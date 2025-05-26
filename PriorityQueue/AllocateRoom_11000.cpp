@@ -1,14 +1,16 @@
 #include <iostream>
 #include <queue>
+#include <deque>
+#include <algorithm>
 using namespace std;
 
-struct roomTime {
+struct lecture {
     int start;
     int end;
 };
 
 struct cmp {
-    bool operator() (roomTime a, roomTime b) {
+    bool operator() (lecture a, lecture b) {
         if(a.start == b.start)
             return a.end > b.end;
         else
@@ -16,50 +18,51 @@ struct cmp {
     }
 };
 
-int main() {
-    priority_queue<roomTime, vector<roomTime>, cmp> classes;
-    priority_queue<roomTime, vector<roomTime>, cmp> tempo;
-    priority_queue<roomTime, vector<roomTime>, cmp> zero;
-    int num; cin >> num;
-    int count = 0;
+// 필요한 강의실의 갯수를 찾는 함수
+int allocated(priority_queue<lecture, vector<lecture>, cmp> &lectures) {
+    priority_queue<int, vector<int>, greater<int>> lectureEnd; // 수업의 끝난 시간 저장 -> 강의실 갯수
 
-    while(num--) {
-        roomTime tmp;
-        cin >> tmp.start >> tmp.end;
-        classes.push(tmp);
-    }
-
-    while(1) {
-        if(classes.empty())
-            break;
-        int newStart = classes.top().end;
-        classes.pop();
+    while(!lectures.empty()) {
+        lecture top = lectures.top();
         
-        while(1) {
-            // 수업이 끝나기 전에 다른 수업이 시작하는 경우
-            if(!classes.empty() && newStart > classes.top().start) {
-                tempo.push(classes.top());
-                classes.pop();
-            }
-            else if(!classes.empty()){
-                newStart = classes.top().end;
-                classes.pop();
-            }
-
-            if(classes.empty() && !tempo.empty()) {
-                classes = tempo;
-                tempo = zero;
-                count++;
-                break;
-            }
-
-            if (classes.empty() && tempo.empty()) {
-                count++;
-                break;
-            }
+        // 처음 접근시 강의실 목록 생성
+        if(lectureEnd.empty()) {
+            lectureEnd.push(top.end);
+            lectures.pop();
+            continue;    
         }
-        
+
+        // 가장 빠른 수업이 끝나기 전에 시작하는 경우 -> 새로운 강의실 추가
+        if(top.start < lectureEnd.top()) {
+            lectureEnd.push(top.end);
+            lectures.pop();
+        }
+        // 가장 빠른 수업이 끝나고 시작하는 경우 -> 강의실 시간 조정 : 추가 x
+        else {
+            lectureEnd.pop();
+            lectureEnd.push(top.end);
+            lectures.pop();
+        }
+
     }
-    cout << count;
+
+    return lectureEnd.size();
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    priority_queue<lecture, vector<lecture>, cmp> lectures;
+
+    int num; cin >> num;
+    while(num--) {
+        lecture lec;
+        cin >> lec.start >> lec.end;
+        lectures.push(lec);
+    }
+
+    cout << allocated(lectures);
+
     return 0;
 }

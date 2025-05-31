@@ -2,10 +2,11 @@
 #include <vector>
 using namespace std;
 
-int capacity = 500001; // 해쉬를 이용하기 위힌 
+int capacity = 100003; // 해쉬를 이용하기 위힌 
 
 struct Node {
     int data;
+    int count; // 등장 횟수를 알기 위한 변수수
     Node *next;
 };
 
@@ -21,22 +22,34 @@ public:
     void insert(int e) {
         int bucket = (e % capacity + capacity) % capacity; // 음수를 양수로 만들기 위한 hash
 
-        Node *node = new Node{e, this->arr[bucket]};
-        this->arr[bucket] = node;
+        Node *node = this->arr[bucket];
+
+        while(node != nullptr) {
+            if(node->data == e) { // data값이 같은 노드가 존재하다면 count++하고 리턴
+                node->count++;
+                return;
+            }
+            node = node->next; // 다른 노드를 검사
+        }
+
+        // 존재하지 않는 값을 가진 노드라면 새로 생성
+        Node *newNode = new Node{e, 1, this->arr[bucket]};
+        this->arr[bucket] = newNode;
     }
 
     int search(int e) {
-        int count = 0;
         int bucket = (e % capacity + capacity) % capacity;
         Node *node = this->arr[bucket];
 
         while(node != nullptr) {
-            if(node->data == e) 
-                count++;
+            if(node->data == e) {
+                return node->count;
+            }
             node = node->next;
         }
-
-        return count;
+        
+        // 못 찾았다면 0
+        return 0;
     }
 };
 

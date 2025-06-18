@@ -28,9 +28,9 @@ public:
         // 올바른 위치의 등산 과정
         int idx = this->size;
         // 루트 노드가 아니고 x값이 더 작거나 같아야함
-        while(idx != 1 && this->arr[idx].x <= this->arr[idx/2].x) {
+        while(idx != 1 && coord.x <= this->arr[idx/2].x) {
             // 만약 x값이 같은 경우 y값으로 판단
-            if(this->arr[idx].x == this->arr[idx/2].x && this->arr[idx].y > this->arr[idx/2].y)
+            if(coord.x == this->arr[idx/2].x && coord.y > this->arr[idx/2].y)
                 break;
             
             this->arr[idx] = this->arr[idx/2];
@@ -55,8 +55,8 @@ public:
         while(ci <= this->size) {
             // 자식 노드 중 올릴 것을 선택
             if(ci < this->size && this->arr[ci].x >= this->arr[ci+1].x) {
-                if(this->arr[ci].x == this->arr[ci+1].x && this->arr[ci].y > this->arr[ci+1].y)
-                    ci++;
+                if(this->arr[ci].x == this->arr[ci+1].x && this->arr[ci].y < this->arr[ci+1].y)
+                    ; // 그러나 y값이 크면 동생이 올라감
                 else 
                     ci++;
             }
@@ -64,8 +64,8 @@ public:
             // 더 작으면 내려갈 필요가 없음
             if(key.x <= this->arr[ci].x) {
                 // 같아도 y값이 더 작으면 내려갈 필요없음
-                if(key.x == this->arr[ci].x && key.y < this->arr[ci].y)
-                    break;
+                if(key.x == this->arr[ci].x && key.y > this->arr[ci].y)
+                    ;
                 else break;
             }
 

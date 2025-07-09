@@ -5,43 +5,40 @@
 using namespace std;
 
 struct coordinate {
-    int idx;
-    int x;
+    int idx; // 기존 인덱스
+    int x; 
 };
-
-bool cmp(coordinate a, coordinate b) {
-    return a.idx < b.idx;
-}
 
 // 합병하는 함수
 void merge(vector<coordinate> &arr, int start, int mid, int end) {
-    vector<coordinate> copy = arr; // 정렬 비교를 위한 복사본
-    int idxL = start; // 왼쪽 배열 시작 idx
-    int idxR = mid+1; // 오른쪽 배열 시작 idx
-    int idx = start; // 본체 idx    
-    
-    while(idxL <= mid && idxR <= end) {
-        if(copy[idxL].x <= copy[idxR].x) {
-            arr[idx] = copy[idxL];
-            idx++, idxL++;
-        }       
+    int left = start;
+    int right = mid + 1;
+    vector<coordinate> temp; // 결과를 위한 임시용
+
+    // 병합
+    while (left <= mid && right <= end) {
+        if (arr[left].x <= arr[right].x) {
+            temp.push_back(arr[left++]);
+        }
         else {
-            arr[idx] = copy[idxR];
-            idx++, idxR++;
+            temp.push_back(arr[right++]);
         }
     }
-    
-    // 나머지 삽입
-    while(idxL <= mid) {
-        arr[idx] = copy[idxL];
-        idx++, idxL++;
+
+    // 왼쪽 나머지
+    while (left <= mid) {
+        temp.push_back(arr[left++]);
     }
-    
-    while(idxR <= end) {
-        arr[idx] = copy[idxR];
-        idx++, idxR++;
+
+    // 오른쪽 나머지
+    while (right <= end) {
+        temp.push_back(arr[right++]);
     }
-    
+
+    // 결과 덮어쓰기
+    for (int i = 0; i < temp.size(); i++) {
+        arr[start + i] = temp[i];
+    }
 }
 
 // 좌표계 정렬하는 함수
@@ -60,13 +57,18 @@ void mergeSort(vector<coordinate> &arr, int start, int end) {
 // 압축하는 함수
 void compression(vector<coordinate> &arr) {
     vector<coordinate> copy = arr; // 정렬을 위한 복사본
-    arr[0].x = 0; // 초기화
+    int count = -1;
+
+    // 첫 번째 초기화
+    coordinate coord = copy[0];
+    arr[coord.idx].x = ++count;
 
     for(int i = 1; i < arr.size(); i++) {
-        if(copy[i].x == copy[i-1].x)
-            arr[i].x = arr[i-1].x;
-
-        else arr[i].x = arr[i-1].x + 1;
+        coord = copy[i];
+        if(copy[i].x == copy[i-1].x) 
+            arr[coord.idx].x = count;
+        else
+            arr[coord.idx].x = ++count;
     }
 }
 
@@ -88,8 +90,8 @@ int main() {
 
     mergeSort(arr, 0, len-1);
     compression(arr);
-    sort(arr.begin(), arr.end(), cmp);
 
+    // 출력문
     for(int i = 0; i < arr.size(); i++) {
         cout << arr[i].x << " ";
     }

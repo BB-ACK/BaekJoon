@@ -1,3 +1,12 @@
+/* 개선점 
+1. 현재 이름은 BFS나 DFS 방식으로 진행중 -> dequeue를 이용해서 front, pop이용(그러나 탐색방법은 상관없음)
+2. 방문처리를 push하는 시점에서 하는 것이 좋다 - 중복 push의 가능성
+3. 4방향 탐색보다 dx, dy 배열을 활용하면 간결해짐
+// 방향 벡터 (상, 하, 좌, 우)
+int dx[] = {0, 0, -1, 1};
+int dy[] = {-1, 1, 0, 0};
+*/
+
 #include <iostream>
 #include <vector>
 using namespace std;
